@@ -1,7 +1,7 @@
 import React,{useState, useEffect} from 'react'
 import { Navbar } from './Navbar'
 import { Products } from './Products'
-import { IndividualFilteredProduct } from './IndividualFilteredProduct'
+import { FilteredProduct } from './FilteredProduct'
 
 export const Home = (props) => {
     const [spans,setSpans]=useState([]);
@@ -99,7 +99,7 @@ export const Home = (props) => {
                       <a href="javascript:void(0)" onClick={returntoAllProducts}>Return to All Products</a>
                       <div className='products-box'>
                           {filteredProducts.map(individualFilteredProduct=>(
-                              <IndividualFilteredProduct key={individualFilteredProduct.ID}
+                              <FilteredProduct key={individualFilteredProduct.ID}
                               individualFilteredProduct={individualFilteredProduct}
                               addToCart={addToCart}/>
                           ))}

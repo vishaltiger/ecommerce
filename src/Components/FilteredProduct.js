@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const IndividualFilteredProduct = ({individualFilteredProduct, addToCart}) => {
+export const FilteredProduct = ({individualFilteredProduct, addToCart}) => {
 
     const handleAddToCart=()=>{
         addToCart(individualFilteredProduct);
