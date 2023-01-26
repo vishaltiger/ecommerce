@@ -101,9 +101,7 @@ export const Cart = () => {
                         <div>
                         Total Price to Pay: <span>$ {totalPrice}</span>
                         </div>
-                        <br></br>
-                         <h6 className='text-center'
-                        style={{marginTop: 7+'px'}}>OR</h6>                                                                                                                                          
+                        <br></br>                                                                                                                                         
                     </div>                                    
                 </div>
             )}
