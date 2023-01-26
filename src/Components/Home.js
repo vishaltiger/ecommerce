@@ -1,51 +1,15 @@
 import React,{useState, useEffect} from 'react'
 import { Navbar } from './Navbar'
 import { Products } from './Products'
-import {auth,fs} from '../Config/Config'
 import { IndividualFilteredProduct } from './IndividualFilteredProduct'
 
 export const Home = (props) => {
     const [spans,setSpans]=useState([]);
-
-    // getting current user uid
-    function GetUserUid(){
-        const [uid, setUid]=useState(null);
-        useEffect(()=>{
-            auth.onAuthStateChanged(user=>{
-                if(user){
-                    setUid(user.uid);
-                }
-            })
-        },[])
-        return uid;
-    }
-
-    const uid = GetUserUid();
-
-    // getting current user function
-    function GetCurrentUser(){
-        const [user, setUser]=useState(null);
-        useEffect(()=>{
-            auth.onAuthStateChanged(user=>{
-                if(user){
-                    fs.collection('users').doc(user.uid).get().then(snapshot=>{
-                        setUser(snapshot.data().FullName);
-                    })
-                }
-                else{
-                    setUser(null);
-                }
-            })
-        },[])
-        return user;
-    }
-
-    const user = GetCurrentUser();
-    // console.log(user);
-    
-    // state of products
+    const [cartProduct,setCartProduct] = useState([]);
     const [products, setProducts]=useState([]);
-
+    const [category, setCategory]=useState('');
+    const [filteredProducts, setFilteredProducts]=useState([]);
+  
     // getting products function
     const getProducts = ()=>{
         let cato = [];
@@ -62,14 +26,15 @@ export const Home = (props) => {
     }
 
     useEffect(()=>{
+        let cartProducts = JSON.parse(sessionStorage.getItem('cartProducts'));
+        if(cartProducts && cartProducts.length>0){
+            setCartProduct(cartProducts);
+        }
         getProducts();
     },[])
 
-    // state of totalProducts
-    const [totalProducts, setTotalProducts]=useState(0);
     // getting cart products   
     useEffect(()=>{ 
-
         getProducts();      
     },[])  
 
@@ -79,32 +44,23 @@ export const Home = (props) => {
     // add to cart
     const addToCart = (product)=>{
             Product=product;
+            let cartProducts = cartProduct;
             Product['qty']=1;
             Product['TotalProductPrice']=Product.qty*Product.price;
-            
-
-        
-        
+           let sameCartProducts = cartProducts.filter(prod=>prod.id==product.id);
+           if(sameCartProducts.length==0){
+            setCartProduct([...cartProduct,Product]);
+            cartProducts.push(Product);
+            sessionStorage.setItem('cartProducts',JSON.stringify(cartProduct));
+           }
     }
-
-     // categories list rendering using span tag
-  
-
-    // active class state
-    const [active, setActive]=useState('');
-
-    // category state
-    const [category, setCategory]=useState('');
 
     // handle change ... it will set category and active states
     const handleChange=(individualSpan)=>{
-        setActive(individualSpan.id);
         setCategory(individualSpan.text);
         filterFunction(individualSpan.text);
     }
 
-    // filtered products state
-    const [filteredProducts, setFilteredProducts]=useState([]);
 
     // filter function
     const filterFunction = (text)=>{
@@ -119,14 +75,13 @@ export const Home = (props) => {
 
     // return to all products
     const returntoAllProducts=()=>{
-        setActive('');
         setCategory('');
         setFilteredProducts([]);
     }
 
     return (
         <>
-            <Navbar user={user} totalProducts={totalProducts}/>           
+            <Navbar totalProducts={cartProduct.length}/>           
             <br></br>
             <div className='container-fluid filter-products-main-box'>
                 <div className='filter-box'>
@@ -134,7 +89,7 @@ export const Home = (props) => {
                     {spans.map((individualSpan,index)=>(
                         <span key={index} id={individualSpan.id}
                         onClick={()=>handleChange(individualSpan)}
-                        className={individualSpan.id===active ? active:'deactive'}>{individualSpan.text}</span>
+                        >{individualSpan.text}</span>
                     ))}
                 </div>
               

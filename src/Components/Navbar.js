@@ -1,21 +1,15 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import logo from '../Images/logo.png'
+import logo from '../Images/ecommerce.jpg'
 import {Icon} from 'react-icons-kit'
 import {shoppingCart} from 'react-icons-kit/feather/shoppingCart'
-import {auth} from '../Config/Config'
 import {useHistory} from 'react-router-dom'
 
-export const Navbar = ({user,totalProducts}) => {
+export const Navbar = ({totalProducts}) => {
 
     const history = useHistory();
 
-    const handleLogout=()=>{
-        auth.signOut().then(()=>{
-            history.push('/login');
-        })
-    }
-
+ 
     return (
         <div className='navbar'>
             <div className='leftside'>
